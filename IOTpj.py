@@ -1,3 +1,4 @@
+#-*-coding: utf-8-*-
 # url1 = 시군구별 바깥 미세먼지 현황 XML or json
 # url2 = 내부 미세먼지 1시간단위 XML
 
@@ -97,7 +98,10 @@ while True :
     url3make = "http://apis.data.go.kr/1360000/VilageFcstInfoService/getUltraSrtNcst?serviceKey=1hRc70j0hQLGKt%2FRR11BRwcecwzH22ihk9IkpSvusWQL7ptv%2FMWp15UGnEj2G%2B0s4Cek0MhPQi5oEYU0orK7NQ%3D%3D&numOfRows=10&pageNo=1&base_date=" + ymd + "&base_time=" + hour + "&nx=60&ny=126"  # 용산구
     # url1 = "http://openapi.airkorea.or.kr/openapi/services/rest/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty?sidoName=서울&pageNo=1&numOfRows=10&ServiceKey=1hRc70j0hQLGKt%2FRR11BRwcecwzH22ihk9IkpSvusWQL7ptv%2FMWp15UGnEj2G%2B0s4Cek0MhPQi5oEYU0orK7NQ%3D%3D&ver=1.3&_returnType=json"
     # url2 = "http://apis.data.go.kr/B552584/InairQualityMonitoringService/getInairHourData?date=20200429&serviceKey=1hRc70j0hQLGKt%2FRR11BRwcecwzH22ihk9IkpSvusWQL7ptv%2FMWp15UGnEj2G%2B0s4Cek0MhPQi5oEYU0orK7NQ%3D%3D"
-    url1 = "http://openapi.airkorea.or.kr/openapi/services/rest/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty?sidoName=서울&pageNo=1&numOfRows=10&ServiceKey=1hRc70j0hQLGKt%2FRR11BRwcecwzH22ihk9IkpSvusWQL7ptv%2FMWp15UGnEj2G%2B0s4Cek0MhPQi5oEYU0orK7NQ%3D%3D&ver=1.3&"
+    encode1 = urllib.parse.quote('서울')
+    
+    url1make = "http://openapi.airkorea.or.kr/openapi/services/rest/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty?sidoName="+encode1+"&pageNo=1&numOfRows=10&ServiceKey=1hRc70j0hQLGKt%2FRR11BRwcecwzH22ihk9IkpSvusWQL7ptv%2FMWp15UGnEj2G%2B0s4Cek0MhPQi5oEYU0orK7NQ%3D%3D&ver=1.3&"
+    url1 = url1make
     url2 = url2make
     url3 = url3make
 
@@ -107,7 +111,14 @@ while True :
     response2 = urllib.request.urlopen(request2)
     request3 = urllib.request.Request(url3)
     response3 = urllib.request.urlopen(request3)
-
+    
+    #request1 = urllib2.Request(url1)
+    #response1 = urllib2.urlopen(request1)
+    #request2 = urllib2.Request(url2)
+    #response2 = urllib2.urlopen(request2)
+    #request3 = urllib2.Request(url3)
+    #response3 = urllib2.urlopen(request2)
+    
     rescode1 = response1.getcode()
     rescode2 = response2.getcode()
     rescode3 = response3.getcode()
@@ -120,7 +131,7 @@ while True :
 
     work1 = BeautifulSoup(response_body1, "lxml-xml")
     for item in work1.findAll('item'):
-        if item.stationName.string == '용산구':
+        if item.stationName.string == "용산구":
             print("선택한 지역구 : " + item.stationName.string)
             outsidePMmake = int(item.pm10Value.string)
             break
@@ -176,35 +187,35 @@ while True :
     print ("현재 실내의 온도 가정 : " + str(outsideTP))
 
     token = select(outsidePM, insidePM, insideTP, outsideTP, hour_use, ventil)
-    token = 0
+    token = 3
 
     if token == 0 :
         print ("미세먼지 농도가 안정적입니다")
-        p=subprocess.Popen("python viewer.py")
-        time.sleep(7)
+        p=subprocess.Popen("exec "+"python3 viewer.py", stdout=subprocess.PIPE, shell=True)
+        time.sleep(5)
         p.kill()
     elif token == 1 :
         print ("창문을 열어 환기합니다")
         vent = ventil+1
         print ("오늘 환기 횟수 : " + str(vent))
-        p=subprocess.Popen("python viewer.py")
-        time.sleep(7)
+        p=subprocess.Popen("exec "+"python3 viewer.py", stdout=subprocess.PIPE, shell=True)
+        time.sleep(5)
         p.kill()
-        p=subprocess.Popen("python viewer2.py")
-        time.sleep(7)
-        p.kill()
+        s=subprocess.Popen("exec "+"python3 viewer2.py", stdout=subprocess.PIPE, shell=True)
+        time.sleep(5)
+        s.kill()
     elif token == 2 :
         print ("공기청정기를 가동합니다")
-        p=subprocess.Popen("python viewer.py")
-        time.sleep(7)
+        p=subprocess.Popen("exec "+"python3 viewer.py", stdout=subprocess.PIPE, shell=True)
+        time.sleep(5)
         p.kill()
-        p=subprocess.Popen("python viewer2.py")
-        time.sleep(7)
-        p.kill()
+        s=subprocess.Popen("exec "+"python3 viewer2.py", stdout=subprocess.PIPE, shell=True)
+        time.sleep(5)
+        s.kill()
     elif token == 3 :
         print ("작동시간이 아닙니다")
-        p=subprocess.Popen("python viewer.py")
-        time.sleep(7)
+        p=subprocess.Popen("exec "+"python3 viewer.py", stdout=subprocess.PIPE, shell=True)
+        time.sleep(5)
         p.kill()
 
     ventil += 1
