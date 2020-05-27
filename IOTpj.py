@@ -2,12 +2,9 @@
 # url2 = 내부 미세먼지 1시간단위 XML
 
 import urllib.request
-import json
-from pprint import pprint
-import time
-import math
 from bs4 import BeautifulSoup
-import xml.etree.ElementTree as ET
+import subprocess
+import time
 
 ventil = 0
 token = 0
@@ -82,6 +79,7 @@ def select(outsidePM,insidePM,insideTP,outsideTP,hour_use,ventil):
                     token = 2  # 청정기
     else:
         token = 3 #작동시간대가 아님
+
     return token
 
 while True :
@@ -178,21 +176,37 @@ while True :
     print ("현재 실내의 온도 가정 : " + str(outsideTP))
 
     token = select(outsidePM, insidePM, insideTP, outsideTP, hour_use, ventil)
+    token = 0
 
     if token == 0 :
         print ("미세먼지 농도가 안정적입니다")
+        p=subprocess.Popen("python viewer.py")
+        time.sleep(7)
+        p.kill()
     elif token == 1 :
         print ("창문을 열어 환기합니다")
-        print ("오늘 환기 횟수 : " + (ventil+1))
+        vent = ventil+1
+        print ("오늘 환기 횟수 : " + str(vent))
+        p=subprocess.Popen("python viewer.py")
+        time.sleep(7)
+        p.kill()
+        p=subprocess.Popen("python viewer2.py")
+        time.sleep(7)
+        p.kill()
     elif token == 2 :
         print ("공기청정기를 가동합니다")
-    else :
+        p=subprocess.Popen("python viewer.py")
+        time.sleep(7)
+        p.kill()
+        p=subprocess.Popen("python viewer2.py")
+        time.sleep(7)
+        p.kill()
+    elif token == 3 :
         print ("작동시간이 아닙니다")
-    #창문을 열었으면 닫아야되고
-    #가동 시간 조건넣기
-
-
+        p=subprocess.Popen("python viewer.py")
+        time.sleep(7)
+        p.kill()
 
     ventil += 1
 
-    time.sleep(5)
+    time.sleep(3) # 30분 추가. 총 한시간 후 다시실행
