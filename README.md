@@ -14,7 +14,7 @@ When we purify indoor air by using purifier, we use much energy.
 temperature sensor dth11
 
 ### API
-[Korea public data portal]()
-get outside temperature (https://www.data.go.kr/data/15057682/openapi.do)
-get outside fine dust level (https://www.data.go.kr/data/15000581/openapi.do)
-get inside fine dust level (https://www.data.go.kr/data/15038044/openapi.do)
+Korea public data portal (https://www.data.go.kr/)
+[get outside temperature](https://www.data.go.kr/data/15057682/openapi.do)
+[get outside fine dust level](https://www.data.go.kr/data/15000581/openapi.do)
+[get inside fine dust level](https://www.data.go.kr/data/15038044/openapi.do)
